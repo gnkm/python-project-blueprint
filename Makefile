@@ -31,6 +31,14 @@ drun:
 test:
 	@pytest
 
+dtest:
+	@docker run \
+        --rm \
+        -it \
+        --name ${MODULE} \
+        ${MY_IMAGE_ID} \
+        pytest
+
 lint:
 	@echo "\n${BLUE}Running Pylint against source and test files...${NC}\n"
 	@pylint --rcfile=setup.cfg **/*.py
