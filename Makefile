@@ -18,8 +18,6 @@ TAG := $(shell git describe --tags --always --dirty)
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-COMMAND := python
-
 run:
 	@python -m $(MODULE)
 
@@ -49,6 +47,30 @@ lint:
 	@flake8
 	@echo "\n${BLUE}Running Bandit against source files...${NC}\n"
 	@bandit -r --ini setup.cfg
+
+dlint:
+	@docker run \
+        --rm \
+        -it \
+        --name ${MODULE} \
+        ${IMAGE_ID} \
+		pylint --rcfile=setup.cfg **/*.py
+
+flake:
+	@docker run \
+        --rm \
+        -it \
+        --name ${MODULE} \
+        ${IMAGE_ID} \
+		flake8
+
+bandit:
+	@docker run \
+        --rm \
+        -it \
+        --name ${MODULE} \
+        ${IMAGE_ID} \
+		bandit -r --ini setup.cfg 
 
 # Example: make build-prod VERSION=1.0.0
 build-prod:
