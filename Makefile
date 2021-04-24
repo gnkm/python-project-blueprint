@@ -5,6 +5,7 @@ MODULE := blueprint
 REGISTRY ?= docker.pkg.github.com/martinheinz/python-project-blueprint
 
 IMAGE := $(REGISTRY)/$(MODULE)
+IMAGE_ID := 197f7fd8f206
 
 # This version-strategy uses git tags to set the version string
 TAG := $(shell git describe --tags --always --dirty)
@@ -14,6 +15,13 @@ NC='\033[0m' # No Color
 
 run:
 	@python -m $(MODULE)
+
+drun:
+	@docker run \
+        --rm \
+        -it \
+        --name ${MODULE} \
+        ${IMAGE_ID}
 
 test:
 	@pytest
