@@ -6,8 +6,11 @@ REGISTRY ?= docker.pkg.github.com/martinheinz/python-project-blueprint
 
 IMAGE := $(REGISTRY)/$(MODULE)
 MYIMAGE := gnkm/${MODULE}
-IMAGE_ID := 197f7fd8f206
-MY_IMAGE_ID := fcd27ed58904
+
+# Specify image id with cli.
+# e.g. make drun IMAGE_ID=$(docker images | grep blueprint | head -2 | tail -1 | awk '{print $3}')
+# or make drun IMAGE_ID=$(docker images | fzf | awk '{print $3}')
+IMAGE_ID := 766973b006c3
 
 # This version-strategy uses git tags to set the version string
 TAG := $(shell git describe --tags --always --dirty)
@@ -25,8 +28,8 @@ drun:
         --rm \
         -it \
         --name ${MODULE} \
-        ${MY_IMAGE_ID} \
-		${COMMAND}
+        ${IMAGE_ID} \
+		python -m blueprint
 
 test:
 	@pytest
@@ -36,7 +39,7 @@ dtest:
         --rm \
         -it \
         --name ${MODULE} \
-        ${MY_IMAGE_ID} \
+        ${IMAGE_ID} \
         pytest
 
 lint:
