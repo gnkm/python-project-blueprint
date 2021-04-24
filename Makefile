@@ -5,6 +5,7 @@ MODULE := blueprint
 REGISTRY ?= docker.pkg.github.com/martinheinz/python-project-blueprint
 
 IMAGE := $(REGISTRY)/$(MODULE)
+MYIMAGE := gnkm/${MODULE}
 IMAGE_ID := 197f7fd8f206
 
 # This version-strategy uses git tags to set the version string
@@ -53,6 +54,15 @@ build-dev:
 	    -e 's|{NAME}|$(MODULE)|g'        \
 	    -e 's|{VERSION}|$(TAG)|g'        \
 	    dev.Dockerfile | docker build -t $(IMAGE):$(TAG) -f- .
+
+build-mine:
+	@echo "\n${BLUE}Building Development image with labels:\n"
+	@echo "name: $(MODULE)"
+	@echo "version: $(TAG)${NC}\n"
+	@sed                                 \
+	    -e 's|{NAME}|$(MODULE)|g'        \
+	    -e 's|{VERSION}|$(TAG)|g'        \
+	    my.Dockerfile | docker build --no-cache -t $(MYIMAGE):$(TAG) -f- .
 
 # Example: make shell CMD="-c 'date > datefile'"
 shell: build-dev
